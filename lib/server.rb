@@ -7,7 +7,6 @@ class Server
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     start_server
-
   end
 
   def start_server
@@ -15,14 +14,14 @@ class Server
     loop do
       p "Ready for message"
       client = @tcp_server.accept
-      response.accept_client(client)
       request_lines = []
       while line = client.gets and !line.chomp.empty?
         request_lines << line.chomp
       end
       p request_lines
       response.receive_request_lines(request_lines)
-      response.reader(request_lines)
+      output = response.reader(request_lines)
+      client.puts output
     end
   end
 end

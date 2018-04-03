@@ -6,11 +6,6 @@ class ResponseGenerator
   def initialize
     @request_lines = []
     @counter = 0
-    @client = nil
-  end
-
-  def accept_client(client)
-    @client = client
   end
 
   def receive_request_lines(request_lines)
@@ -39,7 +34,7 @@ class ResponseGenerator
     formatted_text = formatted_response(text)
     output = output(formatted_text)
     headers = headers(output)
-    @client.puts headers + output
+    headers + output
   end
 
   def find_path(request_lines)
