@@ -35,6 +35,13 @@ class ResponseGenerator
     ].join("\r\n")
   end
 
+  def assemble_foh(text)
+    formatted_text = formatted_response(text)
+    output = output(formatted_text)
+    headers = headers(output)
+    @client.puts headers + output
+  end
+
   def find_path(request_lines)
     path = request_lines[0].split[1]
   end
@@ -44,17 +51,15 @@ class ResponseGenerator
     if path == "/hello"
       hello_world_response
     else
-      p request_lines"\n"
+      text = request_lines.join("\n")
+      assemble_foh(text)
     end
   end
 
   def hello_world_response
     @counter += 1
-    x = "Hello World! (#{@counter})"
-    y = formatted_response(x)
-    output = output(y)
-    headers = headers(output)
-    @client.puts headers
-    @client.puts output
+    text = "Hello World! (#{@counter})"
+    assemble_foh(text)
   end
+
 end
