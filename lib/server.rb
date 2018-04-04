@@ -1,6 +1,6 @@
 require 'socket'
-require_relative 'response_generator'
 require 'pry'
+require_relative 'response_generator'
 
 class Server
   attr_reader :tcp_server,
@@ -9,7 +9,7 @@ class Server
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     @client = nil
-    start_server          #runner file to handle
+    start_server
   end
 
   def start_server
@@ -24,15 +24,13 @@ class Server
       p request_lines
       response.receive_request_lines(request_lines)
       x = response.request_parser(request_lines)
-      client.puts x
+      @client.puts x
       end_server if x.include?("shut")
     end
   end
 
   def end_server
-    @client.close
-    tcp_server.close
-    exit
+    @tcp_server.close
   end
 end
 

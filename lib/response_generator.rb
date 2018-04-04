@@ -1,4 +1,8 @@
+require_relative 'output_diagnostics'
+
 class ResponseGenerator
+  include OutputDiagnostics
+
   attr_reader :request_lines,
               :counter,
               :total_count
@@ -22,8 +26,7 @@ class ResponseGenerator
   end
 
   def headers(output)
-    [
-    "http/1.1 200 ok",
+    ["http/1.1 200 ok",
     "date: #{Time.now.strftime('%a, %e %b %Y %H:%M:%S %z')}",
     "server: ruby",
     "content-type: text/html; charset=iso-8859-1",
@@ -47,17 +50,25 @@ class ResponseGenerator
     @total_count += 1
     case
     when path == "/hello"         then hello_world_response
-    when path == "/"              then debug_response
+    when path == "/"              then debug_response(request_lines)
     when path == "/datetime"      then time_response
     when path == "/shutdown"      then shutdown_response
+    when path == "/wordsearch"    then word_search_response
     else
         text = request_lines.join("\n")
         assemble_foh(text)
     end
   end
 
-  def debug_response
-    #code goes here (ITERATION 1)
+  def debug_response(request_lines)
+    text = "Verb: #{verb_select(request_lines)}\n" +
+           "Path: #{path_select(request_lines)}\n" +
+           "Protocol: #{protocol_select(request_lines)}\n" +
+           "Host: #{host_origin_select(request_lines)}\n" +
+           "Port: #{port_select(request_lines)}\n" +
+           "Origin: #{host_origin_select(request_lines)}\n" +
+           "Accept: #{accept_select(request_lines)}\n"
+    assemble_foh(text)
   end
 
   def hello_world_response
