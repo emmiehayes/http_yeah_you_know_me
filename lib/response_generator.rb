@@ -43,20 +43,17 @@ class ResponseGenerator
 
   def reader(request_lines)
     path = find_path(request_lines)
-    #replace if statement with case statement
-    if path == "/hello"
-      hello_world_response
+
+    case
+    when path == "/hello"         then hello_world_response
+    when path == "/"              then debug_response
+    when path == "/datetime"      then time_response
+    when path == "/shutdown"      then shutdown_response
     else
-      text = request_lines.join("\n")
-      assemble_foh(text)
+        text = request_lines.join("\n")
+        assemble_foh(text)
     end
   end
-
-  case
-  when /hello         then hello_world_response
-  when /              then debug_response
-  when /datetime      then time_response
-  when /shutdown      then shutdown_response
 
   def debug_response
     @total_count += 1
