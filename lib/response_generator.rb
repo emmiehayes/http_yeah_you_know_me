@@ -1,14 +1,14 @@
 class ResponseGenerator
   attr_reader :request_lines,
-              :counter,
-              :client
+              :counter
 
   def initialize
-    @request_lines = []
+    @request_lines = []                                                           #RG has to HAVE the request from the client so i set as attribute
     @counter = 0
+    @total_count = 0                                                                 #RG- i put the counter here so that anytime it sends response it counts
   end
 
-  def receive_request_lines(request_lines)
+  def receive_request_lines(request_lines)                                        #method for RRL allows me to
     @request_lines = request_lines
   end
 
@@ -43,6 +43,7 @@ class ResponseGenerator
 
   def reader(request_lines)
     path = find_path(request_lines)
+    #replace if statement with case statement
     if path == "/hello"
       hello_world_response
     else
@@ -51,10 +52,36 @@ class ResponseGenerator
     end
   end
 
+  case
+  when /hello         then hello_world_response
+  when /              then debug_response
+  when /datetime      then time_response
+  when /shutdown      then shutdown_response
+
+  def debug_response
+    @total_count += 1
+    #total_count needs to be included but not outputted to screen
+    #code goes here (ITERATION 1)
+  end
+
   def hello_world_response
+    @total_count += 1
     @counter += 1
     text = "Hello World! (#{@counter})"
     assemble_foh(text)
   end
 
+  def time_response
+    @total_count += 1
+    time = Time.now.strftime('%H:%M%p on %A,%B%d,%Y')
+    assemble_foh(time)
+  end
+
+  def shutdown_response
+      #cant mentipn client in response_generator- needs to move back through server
+      puts ["Wrote this response:", headers, output].join("\n")
+
+      client.close
+      puts "\nResponse complete, exiting.\nTotal Requests: #{total_count}"
+  end
 end
