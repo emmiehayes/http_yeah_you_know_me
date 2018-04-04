@@ -67,7 +67,7 @@ class ResponseGenerator
   end
 
   def time_response
-    time = Time.now.strftime('%H:%M%p on %A,%B%d,%Y')  #clean up date
+    time = Time.now.strftime('%l:%M%p on %A, %B%e, %Y')
     assemble_foh(time)
   end
 
