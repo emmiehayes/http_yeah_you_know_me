@@ -24,3 +24,4 @@ module OutputDiagnostics
     request_lines[6].split(" ")[1]
   end
 end
+ 

@@ -53,11 +53,17 @@ class ResponseGenerator
     when path == "/"              then debug_response(request_lines)
     when path == "/datetime"      then time_response
     when path == "/shutdown"      then shutdown_response
-    when path == "/wordsearch"    then word_search_response
+    when word_search_method(path) then word_search_response
     else
         text = request_lines.join("\n")
         assemble_foh(text)
     end
+  end
+
+  def hello_world_response
+    @counter += 1
+    text = "Hello World! (#{@counter})"
+    assemble_foh(text)
   end
 
   def debug_response(request_lines)
@@ -71,12 +77,6 @@ class ResponseGenerator
     assemble_foh(text)
   end
 
-  def hello_world_response
-    @counter += 1
-    text = "Hello World! (#{@counter})"
-    assemble_foh(text)
-  end
-
   def time_response
     time = Time.now.strftime('%l:%M%p on %A, %B%e, %Y')
     assemble_foh(time)
@@ -84,5 +84,13 @@ class ResponseGenerator
 
   def shutdown_response
     assemble_foh("Server shut down, total request = #{@total_count}")
+  end
+
+  def word_search_method(path)
+    path.include?("word_search")
+  end
+
+  def word_search_response
+    #ran out of time, switched focus to testing my code up to this iteration.
   end
 end

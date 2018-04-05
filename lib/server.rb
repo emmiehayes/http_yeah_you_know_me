@@ -9,7 +9,6 @@ class Server
   def initialize(port)
     @tcp_server = TCPServer.new(port)
     @client = nil
-    start_server
   end
 
   def start_server
@@ -33,5 +32,3 @@ class Server
     @tcp_server.close
   end
 end
-
-x = Server.new(9292)
